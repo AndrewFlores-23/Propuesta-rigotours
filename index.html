@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Demostración de reservas · AW-RiseCR</title>
+<meta name="description" content="Demostración de AW-RiseCR: la web con reservas y el panel en el celular. Datos de ejemplo.">
+<link rel="icon" href="img/aw-logo.png">
+<style>
+@font-face { font-family: "Barlow Condensed"; src: url(fuentes/barlow-condensed-600.woff2) format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Barlow Condensed"; src: url(fuentes/barlow-condensed-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Outfit"; src: url(fuentes/outfit.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Fraunces"; src: url(fuentes/fraunces.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Inter"; src: url(fuentes/inter-latin-400-normal.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Inter"; src: url(fuentes/inter-latin-500-normal.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Inter"; src: url(fuentes/inter-latin-600-normal.woff2) format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url(fuentes/jetbrainsmono.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+
+:root {
+  --f-texto: "Inter", system-ui, -apple-system, sans-serif;
+  --f-num: "JetBrains Mono", ui-monospace, monospace;
+  --linea: rgba(255, 255, 255, 0.09);
+  --linea-f: rgba(255, 255, 255, 0.16);
+  --listo: #5DBE8A;
+  --aviso: #E9B44C;
+}
+body[data-nicho="rigo"] {
+  --fondo: #0B1820; --fondo-rgb: 11, 24, 32; --sup: #13232D; --sup2: #1B303C;
+  --texto: #F6EFE4; --apagado: #A9B6BE; --tenue: #7D8D96;
+  --acento: #F7931E; --acento-rgb: 247, 147, 30; --sobre: #1A0E00;
+  --f-tit: "Barlow Condensed", var(--f-texto); --tit-peso: 700; --tit-esp: 0.005em;
+}
+body[data-nicho="conchal"] {
+  --fondo: #12110F; --fondo-rgb: 18, 17, 15; --sup: #1C1A17; --sup2: #27241F;
+  --texto: #F5EFE3; --apagado: #B3ADA2; --tenue: #857F75;
+  --acento: #3DA5E0; --acento-rgb: 61, 165, 224; --sobre: #04121B;
+  --f-tit: "Outfit", var(--f-texto); --tit-peso: 600; --tit-esp: -0.02em;
+}
+body[data-nicho="masajes"] {
+  --fondo: #15110E; --fondo-rgb: 21, 17, 14; --sup: #201A15; --sup2: #2B231C;
+  --texto: #F3EBE1; --apagado: #B8A897; --tenue: #8A7C6E;
+  --acento: #D4875C; --acento-rgb: 212, 135, 92; --sobre: #1E0F06;
+  --f-tit: "Fraunces", Georgia, serif; --tit-peso: 500; --tit-esp: -0.02em;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; background: var(--fondo); color: var(--texto);
+  font: 15px/1.45 var(--f-texto); -webkit-font-smoothing: antialiased;
+  background-image: radial-gradient(900px 500px at 50% -10%, rgba(var(--acento-rgb), 0.10), transparent 70%);
+  transition: background-color 0.3s;
+}
+button { font: inherit; color: inherit; }
+.ico { width: 18px; height: 18px; flex: none; }
+.mono { font-family: var(--f-num); font-weight: 500; letter-spacing: -0.02em; }
+
+/* ---------- Página ---------- */
+.barra { display: flex; align-items: center; gap: 16px; padding: 12px 24px; border-bottom: 1px solid var(--linea); flex-wrap: wrap; }
+.marca { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; white-space: nowrap; }
+.marca img { width: 30px; height: 30px; object-fit: contain; }
+.marca small { color: var(--apagado); font-weight: 400; }
+.nichos { margin-left: auto; display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--sup); border: 1px solid var(--linea); }
+.nichos button { border: 0; background: none; cursor: pointer; padding: 8px 14px; border-radius: 999px; font-size: 13.5px; font-weight: 500; color: var(--apagado); white-space: nowrap; }
+.nichos button.activo { background: var(--acento); color: var(--sobre); }
+
+.escena { display: flex; justify-content: center; align-items: flex-start; gap: 26px; padding: 18px 20px 6px; }
+.col { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; }
+.col-cabeza { text-align: center; }
+.col-cabeza small { font: 500 11px var(--f-num); letter-spacing: 0.14em; text-transform: uppercase; color: var(--acento); }
+.col-cabeza h2 { margin: 2px 0 8px; font: var(--tit-peso) 23px/1.1 var(--f-tit); letter-spacing: var(--tit-esp); }
+.pestanas { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.pestanas button { cursor: pointer; padding: 6px 12px; border-radius: 999px; font-size: 12.5px; background: none; border: 1px solid var(--linea-f); color: var(--apagado); }
+.pestanas button.activo { border-color: var(--acento); color: var(--texto); background: rgba(var(--acento-rgb), 0.12); }
+.col-nota { margin: 4px 0 0; max-width: 330px; min-height: 40px; text-align: center; font-size: 13px; color: var(--apagado); }
+
+.puente { align-self: center; width: 104px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; font-size: 12px; color: var(--apagado); margin-top: 40px; }
+.puente .via { position: relative; width: 92px; height: 2px; background: linear-gradient(90deg, rgba(var(--acento-rgb), 0.1), var(--acento)); }
+.puente .via::after { content: ""; position: absolute; right: -1px; top: -4px; border: 5px solid transparent; border-left: 7px solid var(--acento); border-right: 0; }
+.puente .punto { position: absolute; top: -4px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--acento); opacity: 0; box-shadow: 0 0 14px var(--acento); }
+.puente.pulso .punto { animation: viaje 0.9s ease-in-out 2; }
+@keyframes viaje { 0% { left: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { left: 84px; opacity: 0; } }
+
+.pie { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; padding: 10px 20px 22px; font-size: 12px; color: var(--tenue); }
+.pie button { background: none; border: 0; padding: 0; cursor: pointer; color: var(--apagado); text-decoration: underline; text-underline-offset: 3px; font-size: 12px; }
+
+/* ---------- Celular ---------- */
+.cel { flex: none; width: 375px; height: 790px; padding: 9px; border-radius: 54px; background: #070809; border: 1px solid rgba(255, 255, 255, 0.14); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), inset 0 0 0 2px #1a1c1f; zoom: var(--k, 1); }
+.pantalla { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 45px; background: var(--fondo); isolation: isolate; }
+.isla { position: absolute; z-index: 50; top: 11px; left: 50%; width: 108px; height: 31px; margin-left: -54px; border-radius: 20px; background: #000; pointer-events: none; }
+.estado { position: absolute; z-index: 45; top: 0; left: 0; right: 0; height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 4px 30px 0 36px; font: 600 15px var(--f-texto); pointer-events: none; color: #fff; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35); }
+.estado i { display: flex; gap: 5px; align-items: center; }
+.estado i b { display: block; width: 24px; height: 11px; border: 1.5px solid #fff; border-radius: 4px; position: relative; }
+.estado i b::after { content: ""; position: absolute; inset: 1.5px 5px 1.5px 1.5px; background: #fff; border-radius: 1.5px; }
+.estado i s { display: block; width: 16px; height: 10px; background: linear-gradient(90deg, #fff 0 22%, transparent 22% 26%, #fff 26% 48%, transparent 48% 52%, #fff 52% 74%, transparent 74% 78%, #fff 78%); clip-path: polygon(0 100%, 100% 0, 100% 100%); }
+.barra-inicio { position: absolute; z-index: 45; bottom: 8px; left: 50%; width: 128px; height: 5px; margin-left: -64px; border-radius: 3px; background: rgba(255, 255, 255, 0.55); pointer-events: none; }
+.vista { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.vista::-webkit-scrollbar { display: none; }
+.toque { position: absolute; z-index: 60; left: 14px; right: 14px; bottom: 100px; display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 14px; background: rgba(28, 28, 30, 0.96); color: #f2f2f2; font-size: 13.5px; line-height: 1.4; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); animation: aparece 0.25s ease-out; }
+.toque .ico { color: var(--acento); margin-top: 1px; }
+@keyframes aparece { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---------- La web ---------- */
+.boton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 13px 18px; border: 0; border-radius: 12px; cursor: pointer; background: var(--acento); color: var(--sobre); font-weight: 600; font-size: 15px; }
+.boton.ancho { width: 100%; }
+.boton.sec { background: none; color: var(--texto); border: 1px solid var(--linea-f); }
+.w-nav { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 10px; padding: 50px 16px 10px; background: rgba(var(--fondo-rgb), 0.94); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--linea); }
+.w-logo { display: flex; align-items: center; gap: 9px; cursor: pointer; }
+.w-logo img { width: 40px; height: 40px; object-fit: contain; }
+.w-logo b { font: var(--tit-peso) 20px/1 var(--f-tit); letter-spacing: var(--tit-esp); }
+.w-logo .palabra { font: 500 24px/1 var(--f-tit); font-style: italic; color: var(--texto); }
+.w-acc { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.w-idioma { cursor: pointer; padding: 5px 8px; border-radius: 7px; border: 1px solid var(--linea-f); background: none; font: 600 11px var(--f-texto); letter-spacing: 0.1em; color: var(--apagado); }
+.w-menu { cursor: pointer; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; border: 0; background: var(--sup); }
+.w-hero { position: relative; margin: 12px 12px 0; height: 400px; border-radius: 22px; overflow: hidden; display: flex; align-items: flex-end; }
+.w-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.w-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(var(--fondo-rgb), 0.92) 88%); }
+.w-hero div { position: relative; z-index: 1; padding: 22px 20px; }
+.ceja { font: 500 11px var(--f-num); letter-spacing: 0.14em; text-transform: uppercase; color: var(--acento); }
+.w-hero h1 { margin: 6px 0 8px; font: var(--tit-peso) 36px/1.02 var(--f-tit); letter-spacing: var(--tit-esp); }
+.w-hero p { margin: 0 0 16px; color: var(--apagado); font-size: 14.5px; }
+.w-confianza { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 16px 14px 2px; }
+.w-confianza span { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 11.5px; line-height: 1.3; color: var(--apagado); }
+.w-confianza .ico { width: 22px; height: 22px; color: var(--acento); }
+.w-sec { display: flex; justify-content: space-between; align-items: baseline; padding: 24px 18px 10px; }
+.w-sec h3 { margin: 0; font: var(--tit-peso) 23px/1.1 var(--f-tit); letter-spacing: var(--tit-esp); }
+.w-sec button { border: 0; background: none; cursor: pointer; color: var(--acento); font-size: 13px; font-weight: 500; padding: 0; }
+.w-carrusel { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 4px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.w-carrusel::-webkit-scrollbar { display: none; }
+.tarjeta { flex: 0 0 218px; scroll-snap-align: start; cursor: pointer; overflow: hidden; border-radius: 16px; background: var(--sup); border: 1px solid var(--linea); text-align: left; padding: 0; }
+.tarjeta img { display: block; width: 100%; height: 140px; object-fit: cover; }
+.tarjeta div { padding: 11px 12px 13px; }
+.tarjeta small { display: block; font-size: 12px; color: var(--tenue); }
+.tarjeta b { display: block; margin: 2px 0 4px; font: var(--tit-peso) 19px/1.1 var(--f-tit); letter-spacing: var(--tit-esp); }
+.tarjeta span { font-size: 13px; color: var(--apagado); }
+.tarjeta strong { color: var(--texto); }
+.w-lista { display: flex; flex-direction: column; gap: 10px; padding: 4px 14px 30px; }
+.w-lista .tarjeta { display: grid; grid-template-columns: 112px 1fr; flex: none; width: 100%; }
+.w-lista .tarjeta img { height: 100%; min-height: 108px; }
+.w-cita { margin: 26px 16px 0; padding: 16px; border-radius: 16px; background: var(--sup); border: 1px solid var(--linea); }
+.w-cita .estrellas { display: flex; gap: 2px; color: var(--acento); }
+.w-cita .estrellas svg { width: 15px; height: 15px; }
+.w-cita p { margin: 8px 0 0; font-size: 13.5px; color: var(--apagado); }
+.w-equipo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 16px; }
+.w-equipo div { padding: 14px 6px; border-radius: 14px; background: var(--sup); text-align: center; font-size: 13px; }
+.w-equipo small { display: block; color: var(--tenue); font-size: 11.5px; }
+.av { display: grid; place-items: center; width: 42px; height: 42px; margin: 0 auto 7px; border-radius: 50%; background: var(--sup2); border: 1px solid rgba(var(--acento-rgb), 0.45); color: var(--acento); font: 600 17px var(--f-tit); }
+.w-pie { margin-top: 30px; padding: 22px 18px 44px; border-top: 1px solid var(--linea); font-size: 12.5px; color: var(--tenue); }
+.w-pie b { display: block; color: var(--texto); font-size: 14px; margin-bottom: 4px; }
+
+.w-foto { position: relative; height: 290px; }
+.w-foto img { width: 100%; height: 100%; object-fit: cover; }
+.w-foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.25), transparent 30%, transparent 60%, var(--fondo)); }
+.w-volver { position: absolute; z-index: 3; top: 54px; left: 14px; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; border: 0; cursor: pointer; background: rgba(0, 0, 0, 0.45); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: #fff; }
+.w-cuerpo { padding: 2px 18px 20px; }
+.w-cuerpo h2 { margin: 6px 0 10px; font: var(--tit-peso) 32px/1.05 var(--f-tit); letter-spacing: var(--tit-esp); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: var(--sup); font-size: 12.5px; color: var(--apagado); }
+.chip .ico { width: 15px; height: 15px; color: var(--acento); }
+.w-precio { display: flex; align-items: baseline; gap: 8px; margin: 16px 0 4px; }
+.w-precio b { font-family: var(--f-num); font-weight: 500; font-size: 28px; letter-spacing: -0.03em; }
+.w-precio span { color: var(--apagado); font-size: 13px; }
+.etq { margin: 20px 0 8px; font: 500 11px var(--f-num); letter-spacing: 0.14em; text-transform: uppercase; color: var(--tenue); }
+.w-cuerpo p { margin: 0; color: var(--apagado); font-size: 14.5px; }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.checks li { display: flex; gap: 9px; font-size: 14px; }
+.checks .ico { color: var(--acento); margin-top: 1px; }
+.w-por-que { margin-top: 18px; padding: 14px 15px; border-radius: 14px; background: var(--sup); border-left: 2px solid var(--acento); }
+.w-por-que p { color: var(--texto); }
+.w-fijo { position: sticky; bottom: 0; z-index: 5; padding: 14px 16px 28px; background: linear-gradient(transparent, var(--fondo) 28%); }
+
+.w-titulo-form { display: flex; align-items: center; gap: 10px; }
+.w-titulo-form h2 { margin: 0; font: var(--tit-peso) 22px/1 var(--f-tit); letter-spacing: var(--tit-esp); }
+.w-titulo-form .w-volver { position: static; background: var(--sup); width: 34px; height: 34px; }
+.w-form { padding: 4px 16px 24px; }
+.sel, .entrada { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--linea-f); background: var(--sup); color: var(--texto); font: 500 15px var(--f-texto); -webkit-appearance: none; appearance: none; outline: none; }
+.sel { background-image: linear-gradient(45deg, transparent 50%, var(--apagado) 50%), linear-gradient(135deg, var(--apagado) 50%, transparent 50%); background-position: calc(100% - 19px) 52%, calc(100% - 14px) 52%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 36px; }
+.entrada:focus, .sel:focus { border-color: var(--acento); }
+.entrada::placeholder { color: var(--tenue); }
+.dias { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.dias::-webkit-scrollbar { display: none; }
+.dia { flex: 0 0 52px; padding: 8px 0; border-radius: 12px; cursor: pointer; text-align: center; background: var(--sup); border: 1px solid var(--linea); }
+.dia small { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tenue); }
+.dia b { font: 500 17px var(--f-num); }
+.elegido { border-color: var(--acento) !important; background: rgba(var(--acento-rgb), 0.14) !important; }
+.horas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.horas.tres { grid-template-columns: repeat(3, 1fr); }
+.hora { cursor: pointer; padding: 10px 12px; border-radius: 12px; text-align: left; background: var(--sup); border: 1px solid var(--linea); }
+.hora b { display: block; font: 500 16px var(--f-num); }
+.hora span { font-size: 11.5px; color: var(--apagado); }
+.hora.lleno { opacity: 0.38; cursor: not-allowed; }
+.hora.lleno span { color: var(--tenue); }
+.vacio { padding: 12px; border-radius: 12px; background: var(--sup); color: var(--apagado); font-size: 13px; }
+.pasos { display: flex; align-items: center; justify-content: space-between; padding: 6px; border-radius: 12px; background: var(--sup); border: 1px solid var(--linea); }
+.pasos button { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; border: 0; cursor: pointer; background: var(--sup2); }
+.pasos b { font: 500 18px var(--f-num); }
+.pasos span { font-size: 13px; color: var(--apagado); font-weight: 400; margin-left: 6px; }
+.masajistas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.masajista { cursor: pointer; padding: 10px 2px 9px; border-radius: 12px; text-align: center; background: var(--sup); border: 1px solid var(--linea); font-size: 12.5px; }
+.masajista .av { width: 38px; height: 38px; font-size: 15px; margin-bottom: 5px; }
+.ayuda { margin-top: 6px; font-size: 12px; color: var(--tenue); }
+.w-total { position: sticky; bottom: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 16px 30px; background: var(--sup); border-top: 1px solid var(--linea-f); }
+.w-total small { display: block; font-size: 12px; color: var(--apagado); }
+.w-total b { font: 500 23px var(--f-num); letter-spacing: -0.03em; }
+.w-total .boton { padding: 13px 15px; font-size: 14.5px; }
+
+.w-listo { padding: 86px 20px 40px; text-align: center; }
+.ok { display: grid; place-items: center; width: 74px; height: 74px; margin: 0 auto 16px; border-radius: 50%; background: rgba(var(--acento-rgb), 0.15); color: var(--acento); animation: crece 0.4s ease-out; }
+.ok .ico { width: 34px; height: 34px; }
+@keyframes crece { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.w-listo h2 { margin: 0 0 6px; font: var(--tit-peso) 30px/1.05 var(--f-tit); letter-spacing: var(--tit-esp); }
+.w-listo > p { margin: 0 auto; max-width: 290px; color: var(--apagado); font-size: 14px; }
+.codigo { display: inline-block; margin: 14px 0 16px; padding: 6px 12px; border-radius: 8px; border: 1px dashed rgba(var(--acento-rgb), 0.6); font: 500 14px var(--f-num); color: var(--acento); }
+.resumen { margin: 0 0 18px; padding: 4px 14px; border-radius: 14px; background: var(--sup); text-align: left; }
+.resumen div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--linea); font-size: 13.5px; }
+.resumen div:last-child { border: 0; }
+.resumen dt { color: var(--apagado); }
+.resumen dd { margin: 0; text-align: right; font-weight: 500; }
+
+/* ---------- Panel ---------- */
+.p-cabeza { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 10px; padding: 52px 14px 11px; background: rgba(var(--fondo-rgb), 0.95); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--linea); }
+.p-sello { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 11px; overflow: hidden; background: var(--sup); border: 1px solid rgba(var(--acento-rgb), 0.45); color: var(--acento); font: italic 500 20px var(--f-tit); }
+.p-sello img { width: 36px; height: 36px; object-fit: contain; }
+.p-cabeza small { display: block; font: 500 10.5px var(--f-num); letter-spacing: 0.14em; text-transform: uppercase; color: var(--acento); }
+.p-cabeza b { font-size: 16px; }
+.p-campana { position: relative; margin-left: auto; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--sup); }
+.p-campana em { position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--aviso); color: #1a1200; font: 600 11px/18px var(--f-texto); font-style: normal; text-align: center; }
+.p-dias { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; padding: 12px 10px 4px; }
+.p-dia { position: relative; padding: 7px 0 9px; border-radius: 10px; cursor: pointer; text-align: center; border: 1px solid transparent; background: none; }
+.p-dia small { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tenue); }
+.p-dia b { font: 500 15px var(--f-num); }
+.p-dia i { position: absolute; bottom: 3px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--acento); }
+.p-dia.activo { background: var(--sup); border-color: rgba(var(--acento-rgb), 0.6); }
+.p-titulo { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 16px 0; }
+.p-titulo h3 { margin: 0; font: var(--tit-peso) 23px/1.1 var(--f-tit); letter-spacing: var(--tit-esp); }
+.p-titulo span { font-size: 12px; color: var(--apagado); }
+.p-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px; }
+.p-stats div { padding: 10px 11px; border-radius: 12px; background: var(--sup); border: 1px solid var(--linea); }
+.p-stats b { display: block; font: 500 20px var(--f-num); letter-spacing: -0.03em; }
+.p-stats small { font-size: 11px; color: var(--apagado); }
+.p-stats .pend b { color: var(--aviso); }
+.p-stats b.largo { font-size: 16px; line-height: 25px; white-space: nowrap; }
+.p-filtro { display: flex; gap: 6px; padding: 0 12px 10px; overflow-x: auto; scrollbar-width: none; }
+.p-filtro button { flex: none; cursor: pointer; padding: 6px 11px; border-radius: 999px; background: none; border: 1px solid var(--linea-f); font-size: 12.5px; color: var(--apagado); }
+.p-filtro button.activo { border-color: var(--acento); color: var(--texto); background: rgba(var(--acento-rgb), 0.12); }
+.p-lista { padding: 0 12px 100px; }
+.p-salida { margin-bottom: 10px; padding: 12px 12px 4px; border-radius: 16px; background: var(--sup); border: 1px solid var(--linea); }
+.p-salida-cab { display: grid; grid-template-columns: 54px 1fr auto; gap: 8px; align-items: center; }
+.p-salida-cab > b { font: 500 17px var(--f-num); letter-spacing: -0.03em; }
+.p-salida-cab strong { display: block; font-size: 14.5px; line-height: 1.25; }
+.p-salida-cab span { font-size: 12px; color: var(--apagado); }
+.p-salida-cab em { font: 500 13px var(--f-num); font-style: normal; color: var(--apagado); }
+.p-salida-cab em.lleno { color: var(--acento); }
+.p-barra { height: 4px; margin: 10px 0 4px; border-radius: 4px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.p-barra i { display: block; height: 100%; border-radius: 4px; background: var(--acento); }
+.p-res { display: grid; grid-template-columns: 32px 1fr auto; gap: 10px; align-items: center; width: 100%; padding: 9px 4px; border: 0; border-top: 1px solid var(--linea); background: none; cursor: pointer; text-align: left; }
+.p-ini { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--sup2); font-weight: 600; font-size: 13px; color: var(--apagado); }
+.p-res b, .p-cita b { display: block; font-size: 14px; font-weight: 500; }
+.p-res small, .p-cita small { display: block; font-size: 12px; color: var(--apagado); }
+.nuevo { animation: brillo 1.6s ease-out 2; border-radius: 10px; background: rgba(var(--acento-rgb), 0.13) !important; box-shadow: inset 0 0 0 1px rgba(var(--acento-rgb), 0.7); }
+@keyframes brillo { 0% { box-shadow: inset 0 0 0 1px rgba(var(--acento-rgb), 0.7), 0 0 0 0 rgba(var(--acento-rgb), 0.55); } 100% { box-shadow: inset 0 0 0 1px rgba(var(--acento-rgb), 0.7), 0 0 0 12px rgba(var(--acento-rgb), 0); } }
+.tag-nueva { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 5px; background: var(--acento); color: var(--sobre); font: 600 10px/1.5 var(--f-texto); vertical-align: 2px; }
+.est { display: inline-flex; align-items: center; gap: 5px; font-style: normal; font-size: 11.5px; font-weight: 500; white-space: nowrap; }
+.est::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.est.confirmada { color: var(--listo); }
+.est.pendiente { color: var(--aviso); }
+.est.cancelada { color: var(--tenue); }
+.p-cita { display: grid; grid-template-columns: 50px 1fr auto; gap: 10px; align-items: center; width: 100%; margin-bottom: 8px; padding: 11px 12px; border-radius: 14px; background: var(--sup); border: 1px solid var(--linea); cursor: pointer; text-align: left; }
+.p-cita > b.mono { font-size: 16px; }
+.p-cita .p-mas { display: inline-flex; align-items: center; gap: 5px; }
+.p-cita .p-mas i { display: inline-grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; background: var(--sup2); color: var(--acento); font: 600 9.5px var(--f-texto); font-style: normal; }
+.p-cita-der { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.p-vacio { margin: 10px 0; padding: 26px 16px; border-radius: 16px; border: 1px dashed var(--linea-f); text-align: center; font-size: 13px; color: var(--apagado); }
+.p-semana { padding: 6px 12px 100px; }
+.p-semana button { display: grid; grid-template-columns: 74px 1fr 64px; gap: 10px; align-items: center; width: 100%; padding: 13px 4px; border: 0; border-bottom: 1px solid var(--linea); background: none; cursor: pointer; text-align: left; }
+.p-semana strong { font-size: 14px; font-weight: 500; }
+.p-semana small { display: block; font-size: 11.5px; color: var(--apagado); }
+.p-semana .p-barra { margin: 0; }
+.p-semana em { font: 500 13px var(--f-num); font-style: normal; text-align: right; color: var(--apagado); }
+.p-cat { padding: 6px 12px 100px; }
+.p-cat-fila { display: grid; grid-template-columns: 54px 1fr auto; gap: 11px; align-items: center; padding: 10px 2px; border-bottom: 1px solid var(--linea); }
+.p-cat-fila img { width: 54px; height: 54px; border-radius: 11px; object-fit: cover; }
+.p-cat-fila .av { margin: 0; width: 46px; height: 46px; }
+.p-cat-fila b { display: block; font-size: 14px; font-weight: 500; }
+.p-cat-fila small { display: block; font-size: 12px; color: var(--apagado); }
+.p-cat-fila button { cursor: pointer; padding: 6px 10px; border-radius: 8px; background: none; border: 1px solid var(--linea-f); font-size: 12px; color: var(--apagado); }
+.p-cat-nota { margin: 14px 2px; font-size: 12.5px; color: var(--tenue); }
+.p-tabs { position: absolute; z-index: 20; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(3, 1fr); padding: 8px 8px 26px; background: rgba(var(--fondo-rgb), 0.96); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-top: 1px solid var(--linea); }
+.p-tabs button { display: flex; flex-direction: column; align-items: center; gap: 3px; border: 0; background: none; cursor: pointer; font-size: 11px; color: var(--tenue); }
+.p-tabs .ico { width: 22px; height: 22px; }
+.p-tabs button.activo { color: var(--acento); }
+.noti { position: absolute; z-index: 55; top: 50px; left: 9px; right: 9px; display: flex; gap: 10px; align-items: center; padding: 11px 12px; border-radius: 20px; cursor: pointer; background: rgba(42, 42, 44, 0.94); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); color: #f2f2f2; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45); animation: baja 0.35s ease-out; }
+.noti .p-sello { width: 38px; height: 38px; flex: none; }
+.noti small { display: flex; justify-content: space-between; font-size: 11.5px; color: #b9b9bd; }
+.noti b { display: block; font-size: 14px; }
+.noti span { display: block; font-size: 12.5px; color: #dcdce0; }
+.noti > div { flex: 1; min-width: 0; }
+@keyframes baja { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
+.velo { position: absolute; z-index: 40; inset: 0; display: flex; align-items: flex-end; background: rgba(0, 0, 0, 0.5); animation: aparece 0.2s; }
+.hoja { width: 100%; padding: 10px 18px 32px; border-radius: 24px 24px 0 0; background: var(--sup); border-top: 1px solid var(--linea-f); animation: sube 0.28s ease-out; }
+@keyframes sube { from { transform: translateY(40px); opacity: 0.4; } to { transform: none; opacity: 1; } }
+.agarre { width: 38px; height: 5px; margin: 0 auto 14px; border-radius: 3px; background: var(--linea-f); }
+.hoja-cab { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.hoja h3 { margin: 0; font: var(--tit-peso) 25px/1.1 var(--f-tit); letter-spacing: var(--tit-esp); }
+.hoja .codigo { margin: 6px 0 4px; padding: 3px 8px; font-size: 12.5px; }
+.hoja dl { margin: 8px 0 16px; }
+.hoja dl div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--linea); font-size: 13.5px; }
+.hoja dt { color: var(--apagado); }
+.hoja dd { margin: 0; text-align: right; font-weight: 500; }
+.hoja-acc { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.hoja-acc .boton { padding: 12px 10px; font-size: 14px; }
+.cerrar { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 0; cursor: pointer; background: var(--sup2); }
+
+/* ---------- WhatsApp (versión sin sistema) ---------- */
+.wa { min-height: 100%; background: #0B141A; color: #E9EDEF; padding-bottom: 40px; }
+.wa-cab { position: sticky; top: 0; z-index: 10; padding: 52px 16px 10px; background: #0B141A; }
+.wa-cab h3 { margin: 0; font: 700 27px/1.1 var(--f-texto); letter-spacing: -0.02em; }
+.wa-cab small { font-size: 12.5px; color: #8696A0; }
+.wa-buscar { margin-top: 10px; padding: 9px 14px; border-radius: 20px; background: #202C33; font-size: 14px; color: #8696A0; }
+.wa-chat { display: grid; grid-template-columns: 48px 1fr auto; gap: 12px; align-items: center; width: 100%; padding: 10px 16px; border: 0; background: none; cursor: pointer; text-align: left; color: inherit; }
+.wa-chat.nuevo { box-shadow: none; border-radius: 0; background: rgba(37, 211, 102, 0.08) !important; animation: none; }
+.wa-av { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: #2A3942; font-weight: 600; color: #D1D7DB; }
+.wa-chat b { display: block; font-size: 16px; font-weight: 500; }
+.wa-chat p { margin: 2px 0 0; font-size: 13.5px; color: #8696A0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wa-chat.sin-leer p { color: #D1D7DB; }
+.wa-chat-der { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; font-size: 12px; color: #8696A0; }
+.wa-chat.sin-leer .wa-chat-der { color: #25D366; }
+.wa-chat-der em { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: #25D366; color: #0B141A; font: 600 11.5px/20px var(--f-texto); font-style: normal; text-align: center; }
+.wa-conv-cab { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 10px; padding: 50px 10px 9px; background: #202C33; }
+.wa-conv-cab button { display: grid; place-items: center; width: 32px; height: 32px; border: 0; background: none; cursor: pointer; color: #E9EDEF; }
+.wa-conv-cab .wa-av { width: 38px; height: 38px; font-size: 14px; }
+.wa-conv-cab b { display: block; font-size: 16px; font-weight: 500; }
+.wa-conv-cab small { font-size: 12px; color: #8696A0; }
+.wa-fondo { padding: 14px 12px 150px; }
+.wa-fecha { width: max-content; margin: 4px auto 14px; padding: 5px 10px; border-radius: 8px; background: #182229; font-size: 12px; color: #8696A0; }
+.burbuja { position: relative; max-width: 84%; margin-bottom: 8px; padding: 7px 10px 6px; border-radius: 10px; font-size: 14.5px; line-height: 1.42; }
+.burbuja.entra { background: #202C33; border-top-left-radius: 3px; }
+.burbuja.sale { margin-left: auto; background: #005C4B; border-top-right-radius: 3px; }
+.burbuja time { float: right; margin: 6px 0 -4px 10px; font-size: 11px; color: rgba(233, 237, 239, 0.6); }
+.burbuja b { font-weight: 600; }
+.wa-pie { position: absolute; z-index: 20; left: 0; right: 0; bottom: 0; padding: 8px 10px 28px; background: #0B141A; }
+.wa-rapidas { display: flex; gap: 6px; margin-bottom: 8px; overflow-x: auto; scrollbar-width: none; }
+.wa-rapidas button { flex: none; cursor: pointer; padding: 7px 12px; border-radius: 16px; border: 1px solid #2A3942; background: #111B21; color: #25D366; font-size: 13px; }
+.wa-escribir { display: flex; gap: 8px; align-items: center; }
+.wa-escribir span { flex: 1; padding: 10px 16px; border-radius: 22px; background: #202C33; font-size: 15px; color: #8696A0; }
+.wa-escribir i { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: #25D366; color: #0B141A; }
+
+/* ---------- Pantallas chicas ---------- */
+@media (max-width: 900px) {
+  .barra { padding: 12px 16px; justify-content: center; }
+  .nichos { margin: 0; overflow-x: auto; max-width: 100%; }
+  .nichos { scrollbar-width: none; }
+  .nichos::-webkit-scrollbar { display: none; }
+  .nichos button { padding: 8px 9px; font-size: 12.5px; }
+  .escena { flex-direction: column; align-items: center; gap: 18px; padding: 16px 16px 6px; }
+  .puente { margin: 0; flex-direction: row; width: auto; }
+  .puente .via { width: 2px; height: 34px; background: linear-gradient(180deg, rgba(var(--acento-rgb), 0.1), var(--acento)); }
+  .puente .via::after { right: -4px; top: auto; bottom: -2px; border: 5px solid transparent; border-top: 7px solid var(--acento); border-bottom: 0; }
+  .puente .punto { display: none; }
+}
+</style>
+</head>
+<body data-nicho="rigo">
+<header class="barra">
+  <div class="marca"><img src="img/aw-logo.png" alt=""><span>AW-RiseCR <small>· Demostración</small></span></div>
+  <nav class="nichos" id="nichos">
+    <button data-nicho="rigo">Rigo Tours</button>
+    <button data-nicho="conchal">Conchal Escape</button>
+    <button data-nicho="masajes">Casa de masajes</button>
+  </nav>
+</header>
+
+<main class="escena">
+  <section class="col">
+    <div class="col-cabeza"><small>La web</small><h2 id="tituloWeb"></h2><div class="pestanas" id="pestWeb"></div></div>
+    <div class="cel"><div class="pantalla" id="web"></div></div>
+    <p class="col-nota" id="notaWeb"></p>
+  </section>
+
+  <div class="puente" id="puente"><div class="via"><span class="punto"></span></div><span>La reserva llega al instante</span></div>
+
+  <section class="col">
+    <div class="col-cabeza"><small id="cejaPanel">Su celular</small><h2 id="tituloPanel"></h2><div class="pestanas" id="pestModo">
+      <button data-modo="panel">Con panel de reservas</button>
+      <button data-modo="whatsapp">Solo WhatsApp</button>
+    </div></div>
+    <div class="cel"><div class="pantalla" id="panel"></div></div>
+    <p class="col-nota" id="notaPanel"></p>
+  </section>
+</main>
+
+<footer class="pie"><span>Demostración de AW-RiseCR. Precios, horarios, cupos, nombres y reservas de ejemplo.</span><button id="reiniciar">Reiniciar la demostración</button></footer>
+
+<script>
+/* Demostración para la reunión del 31.10.2026 con Rigo Tours, Conchal Escape y la casa de masajes.
+   Muestra la web por dentro (inicio, lista, página de cada tour o técnica y reserva) y lo que le llega
+   al negocio: el panel de reservas o, en la versión sin sistema, el mensaje armado por WhatsApp.
+   Todo vive en memoria: al recargar vuelve a los datos de ejemplo. */
+
+const ICONOS = {
+  flecha: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  atras: '<path d="M15 5l-7 7 7 7"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  reloj: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  pin: '<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+  grupo: '<circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c.8-3 3-4.6 5.5-4.6s4.7 1.6 5.5 4.6"/><circle cx="16.5" cy="8" r="2.6"/><path d="M15.5 13.6c2.3.1 4.1 1.6 4.8 4.4"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  chat: '<path d="M4.5 19.5l1.2-3.6A7.5 7.5 0 1 1 8.4 18.6z"/>',
+  cal: '<rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10h16M9 3.5v4M15 3.5v4"/>',
+  semana: '<path d="M5 6h14M5 12h14M5 18h9"/>',
+  cuadros: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  campana: '<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 1.5h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+  mas: '<path d="M12 5v14M5 12h14"/>',
+  menos: '<path d="M5 12h14"/>',
+  cerrar: '<path d="M6 6l12 12M18 6L6 18"/>',
+  guia: '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 3.8-6 7-6s6 2 7 6"/>',
+  hoja: '<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19l7-7"/>',
+  info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/>',
+  mic: '<rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5"/>',
+};
+const ico = (n) => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONOS[n]}</svg>`;
+const ESTRELLA = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9 6.8 19.7l1-5.9L3.5 9.7l5.9-.8z"/></svg>';
+
+const HOTELES = ["Westin Reserva Conchal", "W Costa Rica", "Hotel en Brasilito", "Flamingo", "Otro lugar"];
+
+const NICHOS = {
+  rigo: {
+    tipo: "tours", nombre: "Rigo Tours", dueno: "Rigo", logo: "img/rigo/logo-rigo.png", prefijo: "RT", moneda: "$",
+    publico: "Lo que ve el turista", panel: "Lo que ve Rigo en su celular", panelWa: "Lo que le llega a Rigo",
+    pestanas: ["Inicio", "Tours", "Página de un tour", "Reservar"],
+    hero: { img: "img/rigo/portada-cabalgata.jpg", ceja: "Brasilito · Playa Conchal", titulo: "Tours privados en Brasilito y Conchal", texto: "Guías locales desde 2014. Te recogemos en tu hotel.", boton: "Reservar un tour" },
+    confianza: [["pin", "Recogida en tu hotel"], ["guia", "Guías locales"], ["chat", "Confirmación por WhatsApp"]],
+    seccion: "Los más pedidos", seccionTodos: "Todos los tours",
+    menu: "Menú: Tours, Traslados desde Liberia, Nosotros, Preguntas y Contacto.",
+    items: [
+      { id: "atv", nombre: "ATV y side by side", cat: "Aventura", dur: "2 horas", precio: 75, img: "img/rigo/atv-agua.jpg", horas: ["08:00", "13:00"], cupo: 12, guia: "Andrés",
+        texto: "Caminos de tierra, ríos y miradores sobre la costa de Brasilito y Conchal. Para principiantes y para los que buscan barro.",
+        incluye: ["Recogida en tu hotel", "Guía bilingüe", "Casco, agua y fruta", "Parada en el mirador"], llevar: "Ropa que se pueda ensuciar, bloqueador y licencia para manejar." },
+      { id: "cabalgata", nombre: "Cabalgata en Conchal", cat: "Playa", dur: "1 hora", precio: 45, img: "img/rigo/cabalgata-atardecer.jpg", horas: ["09:00", "16:30"], cupo: 8, guia: "Luis",
+        texto: "Del pueblo de Brasilito a la arena de conchas de Playa Conchal, con caballos mansos para todo nivel.",
+        incluye: ["Caballos para todo nivel", "Guía local", "Fotos en la playa"], llevar: "Zapato cerrado, gorra y bloqueador." },
+      { id: "catamaran", nombre: "Catamarán y snorkel", cat: "Mar", dur: "Medio día", precio: 95, img: "img/rigo/catamaran.jpg", horas: ["09:00", "14:00"], cupo: 24, guia: "Capitán Mario",
+        texto: "Navegación por la costa de Guanacaste con parada para snorkel, comida y bebidas a bordo.",
+        incluye: ["Equipo de snorkel", "Comida a bordo", "Bebidas", "Recogida en tu hotel"], llevar: "Vestido de baño, toalla y bloqueador." },
+      { id: "rioceleste", nombre: "Río Celeste", cat: "Naturaleza", dur: "Día completo", precio: 135, img: "img/rigo/rio-celeste.jpg", horas: ["06:30"], cupo: 14, guia: "Andrés",
+        texto: "La catarata celeste del Volcán Tenorio, con caminata guiada y almuerzo típico en la zona.",
+        incluye: ["Transporte ida y vuelta", "Entrada al parque", "Almuerzo típico", "Guía bilingüe"], llevar: "Zapato para caminar, capa y ropa de cambio." },
+      { id: "canopy", nombre: "Canopy y aguas termales", cat: "Aventura", dur: "Día completo", precio: 110, img: "img/rigo/buena-vista-canopy.jpg", horas: ["07:30"], cupo: 16, guia: "Luis",
+        texto: "Cables sobre el bosque en las faldas del Rincón de la Vieja y tarde de aguas termales.",
+        incluye: ["Transporte", "Canopy con equipo", "Aguas termales", "Almuerzo"], llevar: "Vestido de baño y ropa cómoda." },
+    ],
+    reservas: [
+      ["atv", 0, "08:00", 4, "Emily Carter", 0, "confirmada"], ["atv", 0, "08:00", 4, "Familia Rossi", 1, "confirmada"],
+      ["cabalgata", 0, "09:00", 2, "Mark y Jen", 2, "confirmada"], ["catamaran", 0, "14:00", 2, "Sophie Dubois", 0, "confirmada"],
+      ["cabalgata", 0, "16:30", 3, "Lucas Meyer", 3, "pendiente"],
+      ["rioceleste", 1, "06:30", 5, "Familia Smith", 0, "confirmada"], ["atv", 1, "13:00", 2, "Daniel Kim", 1, "pendiente"],
+      ["cabalgata", 1, "16:30", 2, "Ana y Pedro", 2, "confirmada"], ["cabalgata", 1, "16:30", 6, "Grupo Miller", 1, "confirmada"],
+      ["catamaran", 2, "09:00", 4, "Olivia Reed", 0, "confirmada"], ["atv", 2, "08:00", 3, "Tom Becker", 3, "pendiente"],
+      ["canopy", 3, "07:30", 4, "Familia García", 1, "confirmada"], ["atv", 4, "08:00", 2, "Noah Park", 2, "confirmada"],
+    ],
+  },
+  conchal: {
+    tipo: "tours", nombre: "Conchal Escape", dueno: "Conchal Escape", logo: "img/conchal/logo-conchal.png", prefijo: "CE", moneda: "$",
+    publico: "Lo que ve el turista", panel: "Lo que ve Conchal Escape en su celular", panelWa: "Lo que le llega a Conchal Escape",
+    pestanas: ["Inicio", "Aventuras", "Página de una aventura", "Reservar"],
+    hero: { img: "img/conchal/portada-atardecer.jpg", ceja: "Playa Conchal · Brasilito", titulo: "ATV y caballos en Playa Conchal", texto: "Selva, playa y atardecer, a 100 m de la plaza de Brasilito.", boton: "Reservar mi aventura" },
+    confianza: [["pin", "Recogida en tu hotel"], ["reloj", "Salida al atardecer"], ["chat", "Confirmación por WhatsApp"]],
+    seccion: "Aventuras", seccionTodos: "Todas las aventuras",
+    menu: "Menú: Aventuras, Zonas de hoteles, Nosotros, Preguntas y Contacto.",
+    items: [
+      { id: "atv", nombre: "ATV por selva y playa", cat: "Aventura", dur: "2,5 horas", precio: 95, img: "img/conchal/atv-playa.jpg", horas: ["08:00", "14:00"], cupo: 8, guia: "Kevin",
+        texto: "Senderos de selva seca que terminan frente al mar de Conchal. Manejan desde los 16 años.",
+        incluye: ["Recogida en tu hotel", "Guía bilingüe", "Casco y agua", "Fotos del recorrido"], llevar: "Licencia para manejar, ropa cómoda y bloqueador." },
+      { id: "costa", nombre: "Cabalgata en la costa", cat: "Playa", dur: "1 hora", precio: 55, img: "img/conchal/cabalgata-playa.jpg", horas: ["09:30"], cupo: 10, guia: "Mauricio",
+        texto: "Por la orilla de Playa Conchal y los caminos de Brasilito. Desde los 5 años.",
+        incluye: ["Caballos para todo nivel", "Guía local", "Agua"], llevar: "Zapato cerrado y bloqueador." },
+      { id: "atardecer", nombre: "Cabalgata al atardecer", cat: "Atardecer", dur: "1,5 horas", precio: 65, img: "img/conchal/cabalgata-atardecer.jpg", horas: ["16:15"], cupo: 10, guia: "Mauricio",
+        texto: "Salida para ver la puesta del sol desde el caballo, en la orilla de Conchal.",
+        incluye: ["Caballos para todo nivel", "Guía local", "Fotos al atardecer"], llevar: "Zapato cerrado y repelente." },
+      { id: "combo", nombre: "Combo ATV y caballos", cat: "Lo mejor de los dos", dur: "4,5 horas", precio: 150, img: "img/conchal/cabalgata-grupo.jpg", horas: ["08:00"], cupo: 6, guia: "Kevin",
+        texto: "La mañana en ATV por la selva y el cierre a caballo por la playa, en un solo tour.",
+        incluye: ["Recogida en tu hotel", "ATV y caballo", "Bocas y bebidas", "Guía bilingüe"], llevar: "Licencia, zapato cerrado y bloqueador." },
+    ],
+    reservas: [
+      ["atv", 0, "08:00", 3, "Familia Smith", 0, "confirmada"], ["atv", 0, "08:00", 2, "Chris y Ana", 1, "confirmada"],
+      ["costa", 0, "09:30", 4, "Laura Weber", 2, "confirmada"], ["atv", 0, "14:00", 2, "Jake Turner", 3, "pendiente"],
+      ["atardecer", 0, "16:15", 6, "Grupo Rossi", 1, "confirmada"], ["atardecer", 0, "16:15", 2, "Mia y Leo", 0, "pendiente"],
+      ["combo", 1, "08:00", 4, "Familia Brown", 0, "confirmada"], ["atv", 1, "14:00", 2, "Sara Lind", 1, "confirmada"],
+      ["atardecer", 1, "16:15", 10, "Boda Martínez", 1, "confirmada"],
+      ["costa", 2, "09:30", 2, "Ethan Cole", 2, "pendiente"], ["atv", 3, "08:00", 4, "Familia Díaz", 0, "confirmada"],
+    ],
+  },
+  masajes: {
+    tipo: "masajes", nombre: "Bálsamo", dueno: "Bálsamo", logo: null, prefijo: "BL", moneda: "₡",
+    publico: "Lo que ve el cliente", panel: "Lo que ve cada masajista en su celular", panelWa: "Lo que le llega al negocio",
+    pestanas: ["Inicio", "Técnicas", "Página de una técnica", "Reservar"],
+    hero: { img: "img/masajes/portada-vela.jpg", ceja: "Casa de masajes", titulo: "Cada masaje, explicado y a tu hora", texto: "Te contamos qué hace cada técnica, eliges a tu masajista y reservas en un minuto.", boton: "Reservar mi masaje" },
+    confianza: [["grupo", "Eliges a tu masajista"], ["reloj", "Reservas en un minuto"], ["chat", "Recordatorio por WhatsApp"]],
+    seccion: "Técnicas", seccionTodos: "Todas las técnicas",
+    menu: "Menú: Técnicas, Nuestro equipo, Precios, Preguntas y Contacto.",
+    masajistas: [{ id: "karla", nombre: "Karla", hace: "Descontracturante y deportivo" }, { id: "andrea", nombre: "Andrea", hace: "Relajante y drenaje" }, { id: "daniela", nombre: "Daniela", hace: "Piedras y reflexología" }],
+    horas: ["09:00", "10:30", "12:00", "13:30", "15:00", "16:30"],
+    items: [
+      { id: "descontracturante", nombre: "Descontracturante", cat: "Presión firme", opciones: [[60, 28000], [90, 38000]], img: "img/masajes/descontracturante.jpg",
+        porque: "La presión firme y lenta llega a las capas profundas del músculo y suelta los nudos que dejan la tensión y las malas posturas.",
+        aporta: ["Menos dolor de cuello, hombros y espalda", "Más movimiento al girar o agacharte", "Mejor descanso esa noche"], ideal: "Pasas horas sentado, manejas mucho o cargas peso." },
+      { id: "relajante", nombre: "Relajante", cat: "Presión suave", opciones: [[60, 25000], [90, 35000]], img: "img/masajes/relajante.jpg",
+        porque: "Los movimientos largos y suaves bajan el ritmo de la respiración. El cuerpo sale del modo alerta y el músculo se afloja solo.",
+        aporta: ["Menos estrés", "Sueño más profundo", "Una pausa completa del día"], ideal: "Vienes cansado, estresado o es tu primera vez." },
+      { id: "piedras", nombre: "Piedras calientes", cat: "Presión media", opciones: [[75, 32000]], img: "img/masajes/piedras-calientes.jpg",
+        porque: "El calor de las piedras volcánicas relaja el músculo antes de tocarlo. Así la masajista llega más profundo con menos presión.",
+        aporta: ["Calor que afloja la espalda", "Alivio sin presión fuerte", "Relajación profunda"], ideal: "Quieres soltar tensión pero no te gusta la presión fuerte." },
+      { id: "deportivo", nombre: "Deportivo", cat: "Presión media a firme", opciones: [[60, 28000]], img: "img/masajes/deportivo.jpg",
+        porque: "Trabaja los músculos que más usas al entrenar o surfear y ayuda a que se recuperen antes.",
+        aporta: ["Menos cargas después de entrenar", "Más rango de movimiento", "Recuperación más rápida"], ideal: "Entrenas, surfeas o corres." },
+      { id: "drenaje", nombre: "Drenaje linfático", cat: "Presión muy suave", opciones: [[60, 30000]], img: "img/masajes/drenaje.jpg",
+        porque: "Movimientos rítmicos y suaves que siguen el camino de la linfa y ayudan al cuerpo a soltar el líquido retenido.",
+        aporta: ["Piernas más livianas", "Menos hinchazón", "Sensación de ligereza"], ideal: "Sientes las piernas pesadas o hinchadas." },
+      { id: "reflexologia", nombre: "Reflexología", cat: "Presión puntual", opciones: [[45, 20000]], img: "img/masajes/reflexologia.jpg",
+        porque: "La presión en puntos del pie relaja todo el cuerpo: los pies tienen miles de terminaciones nerviosas.",
+        aporta: ["Relajación general", "Pies descansados", "Ideal para combinar"], ideal: "Pasas el día de pie o quieres algo corto." },
+    ],
+    reservas: [
+      ["deportivo", 0, "09:00", 60, "karla", "Andrés Rojas", "confirmada"], ["descontracturante", 0, "10:30", 60, "karla", "Laura Mora", "confirmada"],
+      ["relajante", 0, "13:30", 90, "karla", "Sofía Pérez", "pendiente"], ["piedras", 0, "10:30", 75, "daniela", "Marco Torres", "confirmada"],
+      ["drenaje", 0, "15:00", 60, "andrea", "Valeria Solís", "confirmada"], ["reflexologia", 0, "12:00", 45, "daniela", "José Arias", "pendiente"],
+      ["relajante", 0, "16:30", 60, "andrea", "Camila Vargas", "confirmada"],
+      ["descontracturante", 1, "09:00", 90, "karla", "María Fallas", "confirmada"], ["relajante", 1, "10:30", 60, "andrea", "Diego León", "pendiente"],
+      ["piedras", 1, "15:00", 75, "daniela", "Paula Núñez", "confirmada"], ["deportivo", 2, "13:30", 60, "karla", "Luis Castro", "confirmada"],
+    ],
+  },
+};
+
+/* ---------- Fechas y formatos ---------- */
+const DIAS = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
+const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+const HOY = new Date(); HOY.setHours(0, 0, 0, 0);
+const fecha = (n) => { const d = new Date(HOY); d.setDate(d.getDate() + n); return d; };
+const diaCorto = (n) => n === 0 ? "Hoy" : n === 1 ? "Mañana" : `${DIAS[fecha(n).getDay()]} ${fecha(n).getDate()}`;
+const diaLargo = (n) => { const d = fecha(n); return `${DIAS[d.getDay()]} ${d.getDate()} ${MESES[d.getMonth()]}`; };
+const miles = (v) => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+const plata = (v) => N.moneda === "$" ? `$${v}` : `₡${miles(v)}`;
+const minutos = (h) => { const [a, b] = h.split(":").map(Number); return a * 60 + b; };
+const yaPaso = (dia, h) => { if (dia !== 0) return false; const ahora = new Date(); return minutos(h) <= ahora.getHours() * 60 + ahora.getMinutes() + 30; };
+const horaAhora = () => { const d = new Date(); return `${d.getHours()}:${String(d.getMinutes()).padStart(2, "0")}`; };
+const may = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+const inicial = (t) => t.trim().charAt(0).toUpperCase();
+const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ---------- Estado ---------- */
+let N, S;
+const HORAS_MSJ = ["7:12", "7:48", "8:05", "Ayer", "Ayer", "Ayer", "Ayer", "Ayer", "Ayer", "Ayer", "Ayer", "Ayer", "Ayer"];
+
+function cargar(id) {
+  N = NICHOS[id];
+  document.body.dataset.nicho = id;
+  const modo = S ? S.modo : "panel";
+  const reservas = N.reservas.map((r, i) => {
+    const base = N.tipo === "tours"
+      ? { item: r[0], dia: r[1], hora: r[2], pax: r[3], nombre: r[4], hotel: HOTELES[r[5]], estado: r[6] }
+      : { item: r[0], dia: r[1], hora: r[2], min: r[3], masajista: r[4], nombre: r[5], estado: r[6] };
+    return { ...base, id: `${N.prefijo}-0${130 + i}`, orden: i, msj: HORAS_MSJ[N.reservas.length - 1 - i] || "Ayer", leida: true, respuesta: null };
+  });
+  S = { nicho: id, modo, web: "inicio", item: N.items[0].id, vista: "dia", dia: 0, filtro: "todas", hoja: null, chat: null, form: null, reservas, sig: 143, ultima: null, nuevo: null, noti: null };
+  document.querySelectorAll("#nichos button").forEach((b) => b.classList.toggle("activo", b.dataset.nicho === id));
+  pintar();
+}
+
+function nuevoForm(item) {
+  if (N.tipo === "tours") return { item, dia: 1, hora: null, pax: 2, hotel: HOTELES[0], nombre: "" };
+  const it = N.items.find((x) => x.id === item);
+  return { item, min: it.opciones[0][0], masajista: "cualquiera", dia: 1, hora: null, nombre: "" };
+}
+
+const itemDe = (id) => N.items.find((x) => x.id === id);
+const activas = () => S.reservas.filter((r) => r.estado !== "cancelada");
+const ocupados = (item, dia, hora) => activas().filter((r) => r.item === item && r.dia === dia && r.hora === hora).reduce((s, r) => s + r.pax, 0);
+const conSistema = () => S.modo === "panel";
+const precioMasaje = (r) => itemDe(r.item).opciones.find((o) => o[0] === r.min)[1];
+const totalDe = (r) => N.tipo === "tours" ? r.pax * itemDe(r.item).precio : precioMasaje(r);
+const libre = (m, dia, h) => !activas().some((r) => r.masajista === m && r.dia === dia && r.hora === h);
+const nombreMas = (id) => (N.masajistas.find((m) => m.id === id) || {}).nombre || "";
+
+/* ---------- Pintar ---------- */
+const CROMO = `<div class="isla"></div><div class="estado"><span>9:41</span><i><s></s><b></b></i></div><div class="barra-inicio"></div>`;
+
+function pintar(opc = {}) {
+  pintarWeb(opc.subirWeb);
+  pintarPanel(opc.subirPanel);
+  document.getElementById("tituloWeb").textContent = N.publico;
+  document.getElementById("tituloPanel").textContent = conSistema() ? N.panel : N.panelWa;
+  const pest = ["inicio", "lista", "detalle", "reservar"];
+  const actual = S.web === "listo" ? "reservar" : S.web;
+  document.getElementById("pestWeb").innerHTML = N.pestanas.map((t, i) => `<button data-a="pest:${pest[i]}" class="${pest[i] === actual ? "activo" : ""}">${t}</button>`).join("");
+  document.querySelectorAll("#pestModo button").forEach((b) => b.classList.toggle("activo", b.dataset.modo === S.modo));
+  document.getElementById("notaWeb").textContent = notaWeb();
+  document.getElementById("notaPanel").textContent = notaPanel();
+}
+
+function notaWeb() {
+  const t = N.tipo === "tours";
+  return {
+    inicio: t ? "Toca un tour para ver su página, o «Reservar» para probar la reserva." : "Toca una técnica para ver por qué funciona, o «Reservar» para probar.",
+    lista: t ? "Cada tour con su foto, duración y precio, en inglés y español." : "Cada técnica con su presión, duración y precio.",
+    detalle: t ? "Cada tour tiene su propia página: precio, horarios, qué incluye y qué llevar." : "Cada técnica explica por qué funciona y qué le aporta al cliente.",
+    reservar: conSistema()
+      ? (t ? "Solo aparecen las horas con cupo. El total se calcula solo." : "Solo aparecen las horas en que la masajista está libre.")
+      : "Sin sistema de cupos: el cliente arma su reserva y les llega completa por WhatsApp.",
+    listo: "Mire el otro celular: la reserva ya llegó.",
+  }[S.web];
+}
+
+function notaPanel() {
+  if (!conSistema()) return S.chat ? "Con un toque le confirman al cliente. La disponibilidad la revisan ustedes." : "Cada reserva llega como un mensaje ordenado, con su número, lista para confirmar.";
+  if (S.vista === "semana") return "La semana completa de un vistazo. Toque un día para verlo.";
+  if (S.vista === "catalogo") return N.tipo === "tours" ? "Precios, horarios y cupos se cambian aquí, sin programador." : "El horario y los días libres de cada masajista.";
+  return N.tipo === "tours" ? "Las salidas del día con sus cupos. Toque una reserva para confirmarla." : "Cada masajista ve sus citas del día. Toque una para confirmarla.";
+}
+
+/* ---------- La web ---------- */
+function logoWeb() {
+  return N.logo
+    ? `<div class="w-logo" data-a="ir:inicio"><img src="${N.logo}" alt=""><b>${N.nombre}</b></div>`
+    : `<div class="w-logo" data-a="ir:inicio"><span class="palabra">${N.nombre}</span></div>`;
+}
+const navWeb = () => `<header class="w-nav">${logoWeb()}<div class="w-acc"><button class="w-idioma" data-a="aviso:La web completa va en inglés y en español, cada página en los dos idiomas.">EN</button><button class="w-menu" data-a="aviso:${N.menu}">${ico("menu")}</button></div></header>`;
+
+function tarjeta(it) {
+  const sub = N.tipo === "tours" ? `${it.dur} · ${it.cat}` : `${it.cat} · ${it.opciones.map((o) => o[0]).join(" o ")} min`;
+  const desde = N.tipo === "tours" ? `desde <strong>${plata(it.precio)}</strong> por persona` : `desde <strong>${plata(it.opciones[0][1])}</strong>`;
+  return `<button class="tarjeta" data-a="ver:${it.id}"><img src="${it.img}" alt="" loading="lazy"><div><small>${sub}</small><b>${it.nombre}</b><span>${desde}</span></div></button>`;
+}
+
+function webInicio() {
+  const h = N.hero;
+  let extra = "";
+  if (N.tipo === "masajes") {
+    extra = `<div class="w-sec"><h3>Nuestro equipo</h3></div><div class="w-equipo">${N.masajistas.map((m) => `<div><span class="av">${inicial(m.nombre)}</span>${m.nombre}<small>${m.hace}</small></div>`).join("")}</div>`;
+  }
+  return `${navWeb()}
+    <section class="w-hero"><img src="${h.img}" alt=""><div><span class="ceja">${h.ceja}</span><h1>${h.titulo}</h1><p>${h.texto}</p><button class="boton" data-a="reservar">${h.boton} ${ico("flecha")}</button></div></section>
+    <div class="w-confianza">${N.confianza.map(([i, t]) => `<span>${ico(i)}${t}</span>`).join("")}</div>
+    <div class="w-sec"><h3>${N.seccion}</h3><button data-a="ir:lista">Ver todos</button></div>
+    <div class="w-carrusel">${N.items.map(tarjeta).join("")}</div>
+    ${extra}
+    <div class="w-cita"><div class="estrellas">${ESTRELLA.repeat(5)}</div><p>Aquí van las reseñas reales de Google${N.tipo === "tours" ? " y Tripadvisor" : ""}, con el nombre y la foto de cada cliente.</p></div>
+    <footer class="w-pie"><b>${N.nombre}</b>WhatsApp · Instagram · ${N.tipo === "tours" ? "Brasilito, Guanacaste" : "Guanacaste"}<br>Español · English</footer>`;
+}
+
+function webLista() {
+  return `${navWeb()}<div class="w-sec"><h3>${N.seccionTodos}</h3></div><div class="w-lista">${N.items.map(tarjeta).join("")}</div>`;
+}
+
+function webDetalle() {
+  const it = itemDe(S.item);
+  if (N.tipo === "tours") {
+    return `<div class="w-foto"><img src="${it.img}" alt=""><button class="w-volver" data-a="ir:lista">${ico("atras")}</button></div>
+      <div class="w-cuerpo">
+        <span class="ceja">${it.cat}</span><h2>${it.nombre}</h2>
+        <div class="chips"><span class="chip">${ico("reloj")}${it.dur}</span><span class="chip">${ico("pin")}Recogida incluida</span><span class="chip">${ico("guia")}Guía bilingüe</span></div>
+        <div class="w-precio"><b>${plata(it.precio)}</b><span>por persona</span></div>
+        <p>${it.texto}</p>
+        <div class="etq">Salidas</div><div class="chips">${it.horas.map((h) => `<span class="chip mono">${h}</span>`).join("")}</div>
+        <div class="etq">Incluye</div><ul class="checks">${it.incluye.map((x) => `<li>${ico("check")}${x}</li>`).join("")}</ul>
+        <div class="etq">Qué llevar</div><p>${it.llevar}</p>
+      </div>
+      <div class="w-fijo"><button class="boton ancho" data-a="reservar:${it.id}">Reservar este tour · ${plata(it.precio)} ${ico("flecha")}</button></div>`;
+  }
+  return `<div class="w-foto"><img src="${it.img}" alt=""><button class="w-volver" data-a="ir:lista">${ico("atras")}</button></div>
+    <div class="w-cuerpo">
+      <span class="ceja">${it.cat}</span><h2>${it.nombre}</h2>
+      <div class="chips">${it.opciones.map((o) => `<span class="chip">${ico("reloj")}${o[0]} min · ${plata(o[1])}</span>`).join("")}</div>
+      <div class="w-por-que"><div class="etq" style="margin-top:0">Por qué funciona</div><p>${it.porque}</p></div>
+      <div class="etq">Qué te aporta</div><ul class="checks">${it.aporta.map((x) => `<li>${ico("check")}${x}</li>`).join("")}</ul>
+      <div class="etq">Es para ti si</div><p>${it.ideal}</p>
+    </div>
+    <div class="w-fijo"><button class="boton ancho" data-a="reservar:${it.id}">Elegir masajista y hora ${ico("flecha")}</button></div>`;
+}
+
+function diasForm(f) {
+  return `<div class="dias">${[0, 1, 2, 3, 4, 5, 6].map((n) => { const d = fecha(n); return `<button class="dia ${f.dia === n ? "elegido" : ""}" data-a="f-dia:${n}"><small>${n === 0 ? "hoy" : DIAS[d.getDay()]}</small><b>${d.getDate()}</b></button>`; }).join("")}</div>`;
+}
+
+function horasTours(f) {
+  const it = itemDe(f.item);
+  const opciones = it.horas.map((h) => {
+    const quedan = it.cupo - ocupados(it.id, f.dia, h);
+    const paso = yaPaso(f.dia, h);
+    const cerrado = paso || (conSistema() && quedan <= 0);
+    return { h, quedan, paso, cerrado };
+  });
+  if (!f.hora || (opciones.find((o) => o.h === f.hora) || {}).cerrado) f.hora = (opciones.find((o) => !o.cerrado) || {}).h || null;
+  if (f.hora && conSistema()) { const q = opciones.find((o) => o.h === f.hora).quedan; if (f.pax > q) f.pax = q; }
+  return `<div class="horas">${opciones.map((o) => {
+    const txt = o.paso ? "Ya salió" : !conSistema() ? "Salida fija" : o.quedan <= 0 ? "Lleno" : `${o.quedan} cupos`;
+    return `<button class="hora ${o.cerrado ? "lleno" : ""} ${f.hora === o.h ? "elegido" : ""}" data-a="${o.cerrado ? "" : "f-hora:" + o.h}"><b>${o.h}</b><span>${txt}</span></button>`;
+  }).join("")}</div>${opciones.every((o) => o.cerrado) ? `<p class="ayuda">No quedan salidas este día. Pruebe otro día.</p>` : ""}`;
+}
+
+function horasMasajes(f) {
+  const lista = N.horas.filter((h) => !yaPaso(f.dia, h)).filter((h) => !conSistema() || (f.masajista === "cualquiera" ? N.masajistas.some((m) => libre(m.id, f.dia, h)) : libre(f.masajista, f.dia, h)));
+  if (!lista.includes(f.hora)) f.hora = lista[0] || null;
+  if (!lista.length) return `<div class="vacio">No quedan horas este día. Pruebe otro día.</div>`;
+  return `<div class="horas tres">${lista.map((h) => `<button class="hora ${f.hora === h ? "elegido" : ""}" data-a="f-hora:${h}"><b>${h}</b><span>${conSistema() ? "Libre" : "A confirmar"}</span></button>`).join("")}</div>`;
+}
+
+function webReservar() {
+  const f = S.form;
+  const it = itemDe(f.item);
+  const t = N.tipo === "tours";
+  let campos;
+  if (t) {
+    const horas = horasTours(f);
+    const max = conSistema() && f.hora ? it.cupo - ocupados(it.id, f.dia, f.hora) : 20;
+    campos = `
+      <div class="etq">Tour</div><select class="sel" data-campo="item">${N.items.map((x) => `<option value="${x.id}" ${x.id === f.item ? "selected" : ""}>${x.nombre} · ${plata(x.precio)}</option>`).join("")}</select>
+      <div class="etq">Día</div>${diasForm(f)}
+      <div class="etq">Hora de salida</div>${horas}
+      <div class="etq">Personas</div><div class="pasos"><button data-a="f-pax:-1">${ico("menos")}</button><b>${f.pax}<span>${f.pax === 1 ? "persona" : "personas"}</span></b><button data-a="f-pax:${f.pax < max ? 1 : 0}">${ico("mas")}</button></div>
+      <div class="etq">Recogida en</div><select class="sel" data-campo="hotel">${HOTELES.map((h) => `<option ${h === f.hotel ? "selected" : ""}>${h}</option>`).join("")}</select>`;
+  } else {
+    horasMasajes(f);
+    campos = `
+      <div class="etq">Masaje</div><select class="sel" data-campo="item">${N.items.map((x) => `<option value="${x.id}" ${x.id === f.item ? "selected" : ""}>${x.nombre}</option>`).join("")}</select>
+      ${it.opciones.length > 1 ? `<div class="etq">Duración</div><div class="horas">${it.opciones.map((o) => `<button class="hora ${f.min === o[0] ? "elegido" : ""}" data-a="f-min:${o[0]}"><b>${o[0]} min</b><span>${plata(o[1])}</span></button>`).join("")}</div>` : `<p class="ayuda">${it.opciones[0][0]} minutos · ${plata(it.opciones[0][1])}</p>`}
+      <div class="etq">¿Con quién?</div><div class="masajistas">
+        <button class="masajista ${f.masajista === "cualquiera" ? "elegido" : ""}" data-a="f-mas:cualquiera"><span class="av">${ico("grupo")}</span>Cualquiera</button>
+        ${N.masajistas.map((m) => `<button class="masajista ${f.masajista === m.id ? "elegido" : ""}" data-a="f-mas:${m.id}"><span class="av">${inicial(m.nombre)}</span>${m.nombre}</button>`).join("")}
+      </div>
+      <div class="etq">Día</div>${diasForm(f)}
+      <div class="etq">${conSistema() ? "Horas libres" : "Hora que prefieres"}</div>${horasMasajes(f)}`;
+  }
+  const total = t ? f.pax * it.precio : it.opciones.find((o) => o[0] === f.min)[1];
+  const resumen = t ? `${f.pax} × ${plata(it.precio)} · ${diaCorto(f.dia)}${f.hora ? " " + f.hora : ""}` : `${f.min} min · ${diaCorto(f.dia)}${f.hora ? " " + f.hora : ""}`;
+  const boton = conSistema() ? `Reservar ${ico("flecha")}` : `${ico("chat")} Enviar por WhatsApp`;
+  return `<header class="w-nav"><div class="w-titulo-form"><button class="w-volver" data-a="ir:detalle">${ico("atras")}</button><h2>Reservar</h2></div><div class="w-acc">${N.logo ? `<img src="${N.logo}" alt="" style="width:34px;height:34px;object-fit:contain">` : ""}</div></header>
+    <div class="w-form">${campos}
+      <div class="etq">Tu nombre</div><input class="entrada" data-campo="nombre" placeholder="${t ? "Ej. Emily Carter" : "Ej. Laura Mora"}" value="${esc(f.nombre)}" autocomplete="off">
+      ${conSistema() ? "" : `<p class="ayuda">Al tocar el botón se abre WhatsApp con la reserva ya escrita.</p>`}
+    </div>
+    <div class="w-total"><div><small>${resumen}</small><b>${plata(total)}</b></div><button class="boton" data-a="${f.hora ? "confirmar" : "aviso:Elija un día con horas disponibles."}">${boton}</button></div>`;
+}
+
+function webListo() {
+  const r = S.ultima;
+  const it = itemDe(r.item);
+  const filas = N.tipo === "tours"
+    ? [["Tour", it.nombre], ["Fecha", `${diaLargo(r.dia)} · ${r.hora}`], ["Personas", r.pax], ["Recogida", r.hotel], ["Total", plata(totalDe(r))]]
+    : [["Masaje", `${it.nombre} · ${r.min} min`], ["Masajista", nombreMas(r.masajista)], ["Fecha", `${diaLargo(r.dia)} · ${r.hora}`], ["Total", plata(totalDe(r))]];
+  const titulo = conSistema() ? "¡Reserva recibida!" : "Reserva enviada por WhatsApp";
+  const texto = conSistema()
+    ? `${N.tipo === "tours" ? "Tu lugar quedó apartado." : "Tu hora quedó apartada."} Te llega la confirmación por WhatsApp y un recordatorio el día antes.`
+    : "Tu reserva le llegó completa al negocio. Te confirman por WhatsApp en unos minutos.";
+  return `<div class="w-listo"><div class="ok">${ico("check")}</div><h2>${titulo}</h2><p>${texto}</p>
+    <span class="codigo">${r.id}</span>
+    <dl class="resumen">${filas.map(([a, b]) => `<div><dt>${a}</dt><dd>${esc(b)}</dd></div>`).join("")}</dl>
+    <button class="boton sec ancho" data-a="ir:inicio">Volver al inicio</button></div>`;
+}
+
+function pintarWeb(subir) {
+  const el = document.getElementById("web");
+  const vieja = el.querySelector(".vista");
+  const pos = vieja ? vieja.scrollTop : 0;
+  const html = { inicio: webInicio, lista: webLista, detalle: webDetalle, reservar: webReservar, listo: webListo }[S.web]();
+  el.innerHTML = `${CROMO}<div class="vista">${html}</div>`;
+  if (!subir) el.querySelector(".vista").scrollTop = pos;
+}
+
+/* ---------- El panel ---------- */
+function cabezaPanel() {
+  const pend = activas().filter((r) => r.estado === "pendiente").length;
+  const sello = N.logo ? `<span class="p-sello"><img src="${N.logo}" alt=""></span>` : `<span class="p-sello">B</span>`;
+  const quien = N.tipo === "tours" ? N.nombre : "Bálsamo · equipo";
+  return `<header class="p-cabeza">${sello}<div><small>Panel de reservas</small><b>${quien}</b></div><span class="p-campana">${ico("campana")}${pend ? `<em>${pend}</em>` : ""}</span></header>`;
+}
+
+function diasPanel() {
+  return `<div class="p-dias">${[0, 1, 2, 3, 4, 5, 6].map((n) => { const d = fecha(n); const hay = activas().some((r) => r.dia === n); return `<button class="p-dia ${S.dia === n ? "activo" : ""}" data-a="p-dia:${n}"><small>${n === 0 ? "hoy" : DIAS[d.getDay()]}</small><b>${d.getDate()}</b>${hay ? "<i></i>" : ""}</button>`; }).join("")}</div>`;
+}
+
+function filaReserva(r) {
+  const nueva = S.nuevo === r.id;
+  return `<button class="p-res ${nueva ? "nuevo" : ""}" data-a="p-res:${r.id}"><span class="p-ini">${inicial(r.nombre)}</span><div><b>${esc(r.nombre)}${nueva ? '<span class="tag-nueva">Nueva</span>' : ""}</b><small>${r.pax} ${r.pax === 1 ? "persona" : "personas"} · ${esc(r.hotel)}</small></div><em class="est ${r.estado}">${etiquetaEstado(r.estado)}</em></button>`;
+}
+const etiquetaEstado = (e) => ({ confirmada: "Confirmada", pendiente: "Por confirmar", cancelada: "Cancelada" }[e]);
+
+function panelDia() {
+  const delDia = S.reservas.filter((r) => r.dia === S.dia);
+  const vivas = delDia.filter((r) => r.estado !== "cancelada");
+  const pend = vivas.filter((r) => r.estado === "pendiente").length;
+  let cuerpo, stats;
+  if (N.tipo === "tours") {
+    const grupos = {};
+    delDia.forEach((r) => { const k = `${r.hora}|${r.item}`; (grupos[k] = grupos[k] || []).push(r); });
+    const claves = Object.keys(grupos).sort();
+    stats = [[vivas.length, "Reservas"], [vivas.reduce((s, r) => s + r.pax, 0), "Personas"], [pend, "Por confirmar", "pend"]];
+    cuerpo = claves.length ? claves.map((k) => {
+      const [hora, id] = k.split("|");
+      const it = itemDe(id);
+      const ocup = ocupados(id, S.dia, hora);
+      return `<article class="p-salida"><div class="p-salida-cab"><b>${hora}</b><div><strong>${it.nombre}</strong><span>Guía ${it.guia}</span></div><em class="${ocup >= it.cupo ? "lleno" : ""}">${ocup}/${it.cupo}${ocup >= it.cupo ? " · lleno" : ""}</em></div>
+        <div class="p-barra"><i style="width:${Math.min(100, (ocup / it.cupo) * 100)}%"></i></div>${grupos[k].map(filaReserva).join("")}</article>`;
+    }).join("") : `<div class="p-vacio">Sin reservas este día.</div>`;
+  } else {
+    const filtradas = delDia.filter((r) => S.filtro === "todas" || r.masajista === S.filtro).sort((a, b) => a.hora.localeCompare(b.hora));
+    stats = [[vivas.length, "Citas"], [pend, "Por confirmar", "pend"], [plata(vivas.reduce((s, r) => s + totalDe(r), 0)).replace(".000", " mil"), "Del día"]];
+    const chips = `<div class="p-filtro"><button class="${S.filtro === "todas" ? "activo" : ""}" data-a="p-filtro:todas">Todas</button>${N.masajistas.map((m) => `<button class="${S.filtro === m.id ? "activo" : ""}" data-a="p-filtro:${m.id}">${m.nombre}</button>`).join("")}</div>`;
+    cuerpo = chips + (filtradas.length ? filtradas.map((r) => {
+      const it = itemDe(r.item);
+      const nueva = S.nuevo === r.id;
+      return `<button class="p-cita ${nueva ? "nuevo" : ""}" data-a="p-res:${r.id}"><b class="mono">${r.hora}</b><div><b>${it.nombre} · ${r.min} min${nueva ? '<span class="tag-nueva">Nueva</span>' : ""}</b><small>${esc(r.nombre)}</small></div><div class="p-cita-der"><small class="p-mas"><i>${inicial(nombreMas(r.masajista))}</i>${nombreMas(r.masajista)}</small><em class="est ${r.estado}">${etiquetaEstado(r.estado)}</em></div></button>`;
+    }).join("") : `<div class="p-vacio">${S.filtro === "todas" ? "Sin citas este día." : `${nombreMas(S.filtro)} no tiene citas este día.`}</div>`);
+  }
+  return `${diasPanel()}<div class="p-titulo"><h3>${may(diaCorto(S.dia))}</h3><span>${diaLargo(S.dia)}</span></div>
+    <div class="p-stats">${stats.map(([v, t, c]) => `<div class="${c || ""}"><b class="${String(v).length > 6 ? "largo" : ""}">${v}</b><small>${t}</small></div>`).join("")}</div>
+    <div class="p-lista">${cuerpo}</div>`;
+}
+
+function panelSemana() {
+  const filas = [0, 1, 2, 3, 4, 5, 6].map((n) => {
+    const v = activas().filter((r) => r.dia === n);
+    const cant = N.tipo === "tours" ? v.reduce((s, r) => s + r.pax, 0) : v.length;
+    return { n, v, cant };
+  });
+  const max = Math.max(1, ...filas.map((f) => f.cant));
+  return `<div class="p-titulo" style="padding-top:16px"><h3>Esta semana</h3><span>${N.tipo === "tours" ? "personas por día" : "citas por día"}</span></div>
+    <div class="p-semana">${filas.map((f) => `<button data-a="p-semana:${f.n}"><div><strong>${may(diaCorto(f.n))}</strong><small>${diaLargo(f.n)}</small></div><div class="p-barra"><i style="width:${(f.cant / max) * 100}%"></i></div><em>${f.cant} ${N.tipo === "tours" ? "pax" : f.cant === 1 ? "cita" : "citas"}</em></button>`).join("")}</div>`;
+}
+
+function panelCatalogo() {
+  if (N.tipo === "tours") {
+    return `<div class="p-titulo" style="padding-top:16px"><h3>Tours</h3><span>${N.items.length} activos</span></div>
+      <div class="p-cat">${N.items.map((it) => `<div class="p-cat-fila"><img src="${it.img}" alt=""><div><b>${it.nombre}</b><small>${plata(it.precio)} · ${it.horas.join(" y ")} · ${it.cupo} cupos</small></div><button data-a="aviso:Aquí se cambia el precio, los horarios, los cupos y las fotos de «${it.nombre}». La web se actualiza sola.">Editar</button></div>`).join("")}
+      <p class="p-cat-nota">Un tour nuevo se agrega desde aquí, con sus fotos, precio, horarios y cupos, sin rediseñar nada.</p></div>`;
+  }
+  return `<div class="p-titulo" style="padding-top:16px"><h3>Equipo</h3><span>citas de hoy</span></div>
+    <div class="p-cat">${N.masajistas.map((m) => { const hoy = activas().filter((r) => r.dia === 0 && r.masajista === m.id).length; return `<div class="p-cat-fila"><span class="av">${inicial(m.nombre)}</span><div><b>${m.nombre}</b><small>${m.hace} · 9:00 a 18:00 · ${hoy} ${hoy === 1 ? "cita" : "citas"} hoy</small></div><button data-a="aviso:Aquí se cambia el horario, los días libres y las técnicas de ${m.nombre}.">Horario</button></div>`; }).join("")}
+    <p class="p-cat-nota">Cada masajista entra con su propio acceso y ve solo su agenda. La administración ve la de todas.</p></div>`;
+}
+
+function hojaReserva() {
+  const r = S.reservas.find((x) => x.id === S.hoja);
+  if (!r) return "";
+  const it = itemDe(r.item);
+  const filas = N.tipo === "tours"
+    ? [["Fecha", `${diaLargo(r.dia)} · ${r.hora}`], ["Personas", r.pax], ["Recogida", r.hotel], ["Guía", it.guia], ["Total", plata(totalDe(r))], ["Estado", `<em class="est ${r.estado}">${etiquetaEstado(r.estado)}</em>`]]
+    : [["Fecha", `${diaLargo(r.dia)} · ${r.hora}`], ["Duración", `${r.min} min`], ["Masajista", nombreMas(r.masajista)], ["Total", plata(totalDe(r))], ["Estado", `<em class="est ${r.estado}">${etiquetaEstado(r.estado)}</em>`]];
+  const acciones = r.estado === "pendiente"
+    ? `<button class="boton" data-a="p-confirmar:${r.id}">${ico("check")} Confirmar</button><button class="boton sec" data-a="p-cancelar:${r.id}">Rechazar</button>`
+    : `<button class="boton sec" data-a="aviso:Se abre el chat de WhatsApp con ${esc(r.nombre)}.">${ico("chat")} WhatsApp</button><button class="boton sec" data-a="p-cerrar">Listo</button>`;
+  return `<div class="velo" data-a="p-cerrar-fondo"><div class="hoja"><div class="agarre"></div>
+    <div class="hoja-cab"><div><h3>${esc(r.nombre)}</h3><span class="codigo">${r.id}</span><div style="font-size:13.5px;color:var(--apagado)">${it.nombre}</div></div><button class="cerrar" data-a="p-cerrar">${ico("cerrar")}</button></div>
+    <dl>${filas.map(([a, b]) => `<div><dt>${a}</dt><dd>${typeof b === "string" && b.startsWith("<em") ? b : esc(b)}</dd></div>`).join("")}</dl>
+    <div class="hoja-acc">${acciones}</div></div></div>`;
+}
+
+function notificacion() {
+  const r = S.reservas.find((x) => x.id === S.noti);
+  if (!r) return "";
+  const it = itemDe(r.item);
+  const sello = N.logo ? `<span class="p-sello"><img src="${N.logo}" alt=""></span>` : `<span class="p-sello">B</span>`;
+  const linea = N.tipo === "tours" ? `${esc(r.nombre)} · ${it.nombre} · ${diaCorto(r.dia)} ${r.hora} · ${r.pax} pers.` : `${esc(r.nombre)} · ${it.nombre} · con ${nombreMas(r.masajista)} · ${diaCorto(r.dia)} ${r.hora}`;
+  return `<div class="noti" data-a="p-res:${r.id}">${sello}<div><small><span>${N.tipo === "tours" ? N.nombre : "Bálsamo"} · Panel</span><span>ahora</span></small><b>${N.tipo === "tours" ? "Nueva reserva" : "Nueva cita"}</b><span>${linea}</span></div></div>`;
+}
+
+/* ---------- WhatsApp (versión sin sistema) ---------- */
+function mensaje(r) {
+  const it = itemDe(r.item);
+  const filas = N.tipo === "tours"
+    ? [["Tour", it.nombre], ["Fecha", `${diaLargo(r.dia)} · ${r.hora}`], ["Personas", r.pax], ["Recogida", r.hotel], ["Nombre", r.nombre], ["Total", plata(totalDe(r))]]
+    : [["Masaje", `${it.nombre} · ${r.min} min`], ["Masajista", nombreMas(r.masajista)], ["Fecha", `${diaLargo(r.dia)} · ${r.hora}`], ["Nombre", r.nombre], ["Total", plata(totalDe(r))]];
+  return `<b>${N.tipo === "tours" ? "Nueva reserva" : "Nueva cita"} · ${r.id}</b><br>${filas.map(([a, b]) => `${a}: ${esc(b)}`).join("<br>")}`;
+}
+
+function waLista() {
+  const chats = [...S.reservas].sort((a, b) => b.orden - a.orden).slice(0, 8);
+  return `<header class="wa-cab"><h3>Chats</h3><small>WhatsApp de ${N.tipo === "tours" ? N.nombre : "Bálsamo"}</small><div class="wa-buscar">Buscar</div></header>
+    ${chats.map((r) => `<button class="wa-chat ${r.leida ? "" : "sin-leer"} ${S.nuevo === r.id ? "nuevo" : ""}" data-a="wa-chat:${r.id}"><span class="wa-av">${inicial(r.nombre)}</span><div style="min-width:0"><b>${esc(r.nombre)}</b><p>${r.respuesta ? "Tú: " + r.respuesta.split(".")[0] : `${N.tipo === "tours" ? "Nueva reserva" : "Nueva cita"} · ${r.id} · ${itemDe(r.item).nombre}`}</p></div><div class="wa-chat-der">${r.msj}${r.leida ? "" : "<em>1</em>"}</div></button>`).join("")}`;
+}
+
+const RAPIDAS = ["Confirmar", "Pedir anticipo", "Ofrecer otra hora"];
+
+function waChat() {
+  const r = S.reservas.find((x) => x.id === S.chat);
+  const cuerpo = `<header class="wa-conv-cab"><button data-a="wa-volver">${ico("atras")}</button><span class="wa-av">${inicial(r.nombre)}</span><div><b>${esc(r.nombre)}</b><small>en línea</small></div></header>
+    <div class="wa-fondo"><div class="wa-fecha">${r.msj === "Ayer" ? "Ayer" : "Hoy"}</div>
+      <div class="burbuja entra">${mensaje(r)}<time>${r.msj === "Ayer" ? "16:40" : r.msj}</time></div>
+      ${r.respuesta ? `<div class="burbuja sale">${esc(r.respuesta)}<time>${r.horaRespuesta} ✓✓</time></div>` : ""}
+    </div>`;
+  const pie = `<div class="wa-pie">${r.respuesta ? "" : `<div class="wa-rapidas">${RAPIDAS.map((t, i) => `<button data-a="wa-resp:${r.id}:${i}">${t}</button>`).join("")}</div>`}<div class="wa-escribir"><span>Mensaje</span><i>${ico("mic")}</i></div></div>`;
+  return { cuerpo, pie };
+}
+
+
+function pintarPanel(subir) {
+  const el = document.getElementById("panel");
+  const vieja = el.querySelector(".vista");
+  const pos = vieja ? vieja.scrollTop : 0;
+  let html;
+  if (conSistema()) {
+    const cuerpo = { dia: panelDia, semana: panelSemana, catalogo: panelCatalogo }[S.vista]();
+    const tabs = [["dia", "cal", "Día"], ["semana", "semana", "Semana"], ["catalogo", "cuadros", N.tipo === "tours" ? "Tours" : "Equipo"]];
+    html = `<div class="vista">${cabezaPanel()}${cuerpo}</div>
+      <nav class="p-tabs">${tabs.map(([v, i, t]) => `<button class="${S.vista === v ? "activo" : ""}" data-a="p-vista:${v}">${ico(i)}${t}</button>`).join("")}</nav>
+      ${S.hoja ? hojaReserva() : ""}${notificacion()}`;
+  } else {
+    if (S.chat) { const c = waChat(); html = `<div class="vista wa">${c.cuerpo}</div>${c.pie}`; }
+    else html = `<div class="vista wa">${waLista()}</div>`;
+  }
+  el.innerHTML = `${CROMO}${html}`;
+  if (!subir) el.querySelector(".vista").scrollTop = pos;
+}
+
+/* ---------- Acciones ---------- */
+let reloj;
+function aviso(donde, texto) {
+  const el = document.getElementById(donde);
+  el.querySelectorAll(".toque").forEach((t) => t.remove());
+  el.insertAdjacentHTML("beforeend", `<div class="toque">${ico("info")}<span>${esc(texto)}</span></div>`);
+  clearTimeout(reloj);
+  reloj = setTimeout(() => el.querySelectorAll(".toque").forEach((t) => t.remove()), 3200);
+}
+
+function confirmar() {
+  const f = S.form;
+  const nombre = f.nombre.trim() || (N.tipo === "tours" ? "Emily Carter" : "Laura Mora");
+  let r;
+  if (N.tipo === "tours") {
+    r = { item: f.item, dia: f.dia, hora: f.hora, pax: f.pax, nombre, hotel: f.hotel };
+  } else {
+    let m = f.masajista;
+    if (m === "cualquiera") m = (N.masajistas.find((x) => libre(x.id, f.dia, f.hora)) || N.masajistas[0]).id;
+    r = { item: f.item, dia: f.dia, hora: f.hora, min: f.min, masajista: m, nombre };
+  }
+  Object.assign(r, { id: `${N.prefijo}-0${S.sig++}`, estado: "pendiente", orden: S.reservas.length + 100, msj: horaAhora(), leida: false, respuesta: null });
+  S.reservas.push(r);
+  S.ultima = r;
+  S.web = "listo";
+  S.nuevo = r.id;
+  S.dia = r.dia;
+  S.vista = "dia";
+  S.hoja = null;
+  S.chat = null;
+  if (N.tipo === "masajes") S.filtro = "todas";
+  pintar({ subirWeb: true, subirPanel: true });
+  const puente = document.getElementById("puente");
+  puente.classList.remove("pulso"); void puente.offsetWidth; puente.classList.add("pulso");
+  setTimeout(() => {
+    if (!conSistema()) return;
+    S.noti = r.id; pintarPanel();
+    setTimeout(() => { if (S.noti === r.id) { S.noti = null; pintarPanel(); } }, 4500);
+  }, 900);
+  if (window.innerWidth <= 900) setTimeout(() => document.getElementById("panel").scrollIntoView({ behavior: "smooth", block: "center" }), 700);
+}
+
+function accion(a, e) {
+  const [tipo, ...resto] = a.split(":");
+  const val = resto.join(":");
+  switch (tipo) {
+    case "pest":
+      if (val === "reservar") { S.form = nuevoForm(S.item); S.web = "reservar"; }
+      else S.web = val;
+      return pintar({ subirWeb: true });
+    case "ir": S.web = val; return pintar({ subirWeb: true });
+    case "ver": S.item = val; S.web = "detalle"; return pintar({ subirWeb: true });
+    case "reservar": S.item = val || S.item; S.form = nuevoForm(val || S.item); S.web = "reservar"; return pintar({ subirWeb: true });
+    case "f-dia": S.form.dia = Number(val); S.form.hora = null; return pintar();
+    case "f-hora": S.form.hora = val; return pintar();
+    case "f-pax": S.form.pax = Math.max(1, S.form.pax + Number(val)); if (Number(val) === 0) aviso("web", "No quedan más cupos en esa salida."); return pintar();
+    case "f-min": S.form.min = Number(val); return pintar();
+    case "f-mas": S.form.masajista = val; return pintar();
+    case "confirmar": return confirmar();
+    case "aviso": return aviso(e.target.closest("#panel") ? "panel" : "web", val);
+    case "p-dia": S.dia = Number(val); S.nuevo = null; return pintar();
+    case "p-vista": S.vista = val; S.hoja = null; return pintar({ subirPanel: true });
+    case "p-semana": S.dia = Number(val); S.vista = "dia"; return pintar({ subirPanel: true });
+    case "p-filtro": S.filtro = val; return pintar();
+    case "p-res": S.hoja = val; S.noti = null; if (S.nuevo === val) S.nuevo = null; { const r = S.reservas.find((x) => x.id === val); if (r) S.dia = r.dia; S.vista = "dia"; } return pintar();
+    case "p-cerrar": S.hoja = null; return pintar();
+    case "p-cerrar-fondo": if (e.target.classList.contains("velo")) { S.hoja = null; pintar(); } return;
+    case "p-confirmar": S.reservas.find((x) => x.id === val).estado = "confirmada"; S.hoja = null; pintar(); return aviso("panel", "Reserva confirmada. Al cliente le llega la confirmación por WhatsApp.");
+    case "p-cancelar": S.reservas.find((x) => x.id === val).estado = "cancelada"; S.hoja = null; pintar(); return aviso("panel", "Reserva rechazada. El cupo queda libre otra vez en la web.");
+    case "wa-chat": { const r = S.reservas.find((x) => x.id === val); r.leida = true; S.chat = val; if (S.nuevo === val) S.nuevo = null; return pintar({ subirPanel: true }); }
+    case "wa-volver": S.chat = null; return pintar({ subirPanel: true });
+    case "wa-resp": {
+      const [id, i] = val.split(":");
+      const r = S.reservas.find((x) => x.id === id);
+      r.respuesta = respuestaTexto(r, Number(i));
+      r.horaRespuesta = horaAhora();
+      if (Number(i) === 0) r.estado = "confirmada";
+      return pintar();
+    }
+  }
+}
+
+function respuestaTexto(r, i) {
+  const primerNombre = r.nombre.split(" ")[0];
+  const t = N.tipo === "tours"
+    ? [`¡Hola ${primerNombre}! Tu reserva ${r.id} está confirmada. Te recogemos en ${r.hotel} 30 minutos antes. ¡Pura vida!`, `¡Hola ${primerNombre}! Para apartar tu reserva ${r.id}, el anticipo es de ${plata(Math.round(totalDe(r) * 0.3))} por SINPE o PayPal.`, `¡Hola ${primerNombre}! Esa salida está llena. ¿Te sirve otro horario el mismo día?`]
+    : [`¡Hola ${primerNombre}! Tu cita ${r.id} con ${nombreMas(r.masajista)} está confirmada para el ${diaLargo(r.dia)} a las ${r.hora}. ¡Te esperamos!`, `¡Hola ${primerNombre}! Para apartar tu cita, el anticipo es de ${plata(totalDe(r) / 2)} por SINPE.`, `¡Hola ${primerNombre}! A esa hora no hay espacio. ¿Te sirve un poco más tarde?`];
+  return t[i];
+}
+
+document.addEventListener("click", (e) => {
+  const n = e.target.closest("[data-nicho]");
+  if (n && n.tagName === "BUTTON") return cargar(n.dataset.nicho);
+  const m = e.target.closest("[data-modo]");
+  if (m) { S.modo = m.dataset.modo; S.hoja = null; S.chat = null; S.noti = null; if (S.form) S.form.hora = null; return pintar({ subirPanel: true }); }
+  if (e.target.closest("#reiniciar")) return cargar(S.nicho);
+  const b = e.target.closest("[data-a]");
+  if (b && b.dataset.a) accion(b.dataset.a, e);
+});
+
+document.addEventListener("change", (e) => {
+  const c = e.target.dataset.campo;
+  if (!c || !S.form) return;
+  if (c === "item") { const nombre = S.form.nombre; S.form = nuevoForm(e.target.value); S.form.nombre = nombre; S.item = e.target.value; }
+  else S.form[c] = e.target.value;
+  pintar();
+});
+document.addEventListener("input", (e) => { if (e.target.dataset.campo === "nombre" && S.form) S.form.nombre = e.target.value; });
+
+/* Ajusta el tamaño de los celulares a la pantalla. */
+function escalar() {
+  const ancho = window.innerWidth, alto = window.innerHeight;
+  const k = ancho <= 900 ? Math.min(1, (ancho - 24) / 395) : Math.max(0.6, Math.min(1, (alto - 250) / 790, (ancho - 230) / 790));
+  document.documentElement.style.setProperty("--k", k.toFixed(3));
+}
+window.addEventListener("resize", escalar);
+escalar();
+
+const pedido = new URLSearchParams(location.search).get("negocio");
+cargar(NICHOS[pedido] ? pedido : "rigo");
+</script>
+</body>
+</html>
